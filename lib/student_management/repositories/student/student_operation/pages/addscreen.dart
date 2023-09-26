@@ -96,10 +96,10 @@ class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFE5E5E5),
       appBar: AppBar(
         title: const Text('Add Student'),
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xFFE5E5E5),
         centerTitle: true,
         elevation: 0,
       ),
@@ -176,36 +176,6 @@ class _AddScreenState extends State<AddScreen> {
                               ),
                       ),
                     ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     showModalBottomSheet(
-                    //         context: context,
-                    //         builder: (context) {
-                    //           return Column(
-                    //             mainAxisSize: MainAxisSize.min,
-                    //             children: <Widget>[
-                    //               ListTile(
-                    //                 leading: const Icon(Icons.camera_alt),
-                    //                 title: const Text('Take Photo'),
-                    //                 onTap: () {
-                    //                   getImage(true);
-                    //                   Navigator.pop(context);
-                    //                 },
-                    //               ),
-                    //               ListTile(
-                    //                 leading: const Icon(Icons.photo),
-                    //                 title: const Text('Choose Photo'),
-                    //                 onTap: () {
-                    //                   getImage(false);
-                    //                   Navigator.pop(context);
-                    //                 },
-                    //               ),
-                    //             ],
-                    //           );
-                    //         });
-                    //   },
-                    // child: const Text("Add Photo"),
-                    // ),
                     TextFormField(
                       controller: nameController,
                       decoration: const InputDecoration(
@@ -251,14 +221,14 @@ class _AddScreenState extends State<AddScreen> {
                     TextFormField(
                       controller: dobContoller,
                       decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
+                          border: const UnderlineInputBorder(),
                           hintText: ' Date of birth',
-                          prefixIcon: Icon(Icons.calendar_month),
+                          prefixIcon: const Icon(Icons.calendar_month),
                           suffixIcon: IconButton(
                               onPressed: () async {
                                 selectDate(context);
                               },
-                              icon: Icon(Icons.calendar_month))),
+                              icon: const Icon(Icons.calendar_month))),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Enter Date of birth";
@@ -294,7 +264,6 @@ class _AddScreenState extends State<AddScreen> {
                       ],
                     ),
                     Height30,
-
                     Container(
                       height: 48,
                       width: double.infinity,
@@ -323,12 +292,9 @@ class _AddScreenState extends State<AddScreen> {
                                 dp: file,
                                 address: address);
 
-                            // Provider.of<StudentProvider>(context, listen: false)
-                            //     .createUser(
-                            //         file, name, DateTime.parse(dob), course, age);
                             Provider.of<StudentProvider>(context, listen: false)
                                 .createUser(st);
-                            //print("student created");
+
                             Navigator.pop(context);
                             Navigator.pushNamed(context, 'student');
                           }

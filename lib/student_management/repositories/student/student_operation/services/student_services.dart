@@ -12,7 +12,19 @@ final CollectionReference _collectionReference =
 class FirebaseService {
   Future<void> createUser(String imageUrl, String name, String dob,
       String course, String age, String address) async {
-    await _collectionReference.doc(name).set({
+    await _collectionReference.doc().set({
+      'imageUrl': imageUrl,
+      'name': name,
+      'dateOfBirth': dob,
+      'course': course,
+      'age': age,
+      'address': address,
+    });
+  }
+
+  Future<void> updateUser(String imageUrl, String name, String dob,
+      String course, String age, String address) async {
+    await _collectionReference.doc(name).update({
       'imageUrl': imageUrl,
       'name': name,
       'dateOfBirth': dob,
@@ -23,6 +35,7 @@ class FirebaseService {
   }
 }
 
+//
 class StudentProvider with ChangeNotifier {
   late Reference imagetoUploadRef;
   final FirebaseService _firebaseService = FirebaseService();
@@ -55,8 +68,8 @@ class StudentProvider with ChangeNotifier {
   }
 
   /// D E L E T E   F U N C T I O N
-  Future<void> deleteStudent(String Studentname) async {
-    await _collectionReference.doc(Studentname).delete();
+  Future<void> deleteStudent(String docId) async {
+    await _collectionReference.doc(docId).delete();
     notifyListeners();
   }
 
@@ -77,9 +90,25 @@ class StudentProvider with ChangeNotifier {
     }
   }
 
-  Future editImage(File? imageFile, String name) async {
-    String? url = await editProfileImage(imageFile, name);
-    await _collectionReference.doc(name).update({'imageUrl': url});
+  // Future editImage(File? imageFile, String name) async {
+  //   String? url = await editProfileImage(imageFile, name);
+  //   await _collectionReference.doc(name).update({'imageUrl': url});
+  //   notifyListeners();
+  // }
+
+  // Future<File> getImage() async {
+  //   final picker = ImagePicker();
+  //   XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+  //   File file = File(pickedFile!.path);
+
+  //   notifyListeners();
+  //   return file;
+  // }
+
+  Future<void> update(Student st) async {
+    await _firebaseService.updateUser(
+        st.dp, st.name, st.dob, st.course, st.age, st.address);
     notifyListeners();
   }
 }

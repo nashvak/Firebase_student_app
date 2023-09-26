@@ -1,9 +1,9 @@
 import 'package:firebase/student_management/repositories/authentication/login_signup/screens/login.dart';
-import 'package:firebase/student_management/repositories/authentication/login_signup/screens/signup.dart';
+
 import 'package:firebase/student_management/repositories/authentication/login_signup/services/auth_provider.dart';
-import 'package:firebase/student_management/repositories/authentication/phone/phone_number.dart';
+
 import 'package:firebase/student_management/repositories/authentication/phone/phone_otp_provider.dart';
-import 'package:firebase/student_management/repositories/authentication/phone/verifycode.dart';
+
 import 'package:firebase/student_management/repositories/push_notification/firebase_api/firebase_api.dart';
 
 import 'package:firebase/student_management/repositories/student/home_page/home.dart';

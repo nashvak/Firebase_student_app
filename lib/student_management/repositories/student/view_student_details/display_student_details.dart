@@ -19,10 +19,16 @@ class StudentDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     //print('build');
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFE5E5E5),
       appBar: AppBar(
-        title: const Text('student details'),
-        backgroundColor: Colors.black,
+        title: const Text(
+          'student details',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Color(0xFFE5E5E5),
+        elevation: 0,
+        centerTitle: true,
+        actionsIconTheme: IconThemeData(color: Colors.black),
         actions: [
           IconButton(
               onPressed: () {
@@ -32,13 +38,6 @@ class StudentDetails extends StatelessWidget {
                 Icons.add,
                 size: 30,
               )),
-          // IconButton(
-          //     icon: const Icon(Icons.logout_outlined),
-          //     onPressed: () {
-          //       Provider.of<AuthService>(context, listen: false).signOut();
-          //       Navigator.of(context)
-          //           .pushNamedAndRemoveUntil('login', (route) => false);
-          //     }),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -49,8 +48,7 @@ class StudentDetails extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
-            QuerySnapshot querySnapshot = snapshot.data;
-            List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+            List<QueryDocumentSnapshot> documents = snapshot.data.docs;
             //Convert the documents to Maps
             List<Map> items = documents.map((e) => e.data() as Map).toList();
 
@@ -58,14 +56,15 @@ class StudentDetails extends StatelessWidget {
             return ListView.separated(
               itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
-                //Get the item at this index
+                final DocumentSnapshot studentSnap = snapshot.data.docs[index];
+                String id = studentSnap.id;
+
                 Map thisItem = items[index];
 
-                return // Card(
-                    // elevation: 15,
-                    // shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(10)),
-                    Listtile(thisItem: thisItem);
+                return Listtile(
+                  thisItem: thisItem,
+                  id: id,
+                );
               },
               separatorBuilder: (context, index) => const Divider(
                 indent: 110,
@@ -85,39 +84,39 @@ class StudentDetails extends StatelessWidget {
 //
 
 class Listtile extends StatelessWidget {
-  const Listtile({
+  Listtile({
     super.key,
     required this.thisItem,
+    required this.id,
   });
 
   final Map thisItem;
-
+  String id;
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
         '${thisItem['name']}',
         style: const TextStyle(
-            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
       ),
       contentPadding: EdgeInsets.only(left: 20),
       horizontalTitleGap: 30,
-      subtitle: Text('${thisItem['course']}',
-          style: const TextStyle(
-              fontSize: 14, color: Color.fromARGB(255, 193, 191, 191))),
-      //trailing: const Icon(Icons.arrow_forward_ios),
-
+      subtitle: Text(
+        '${thisItem['course']}',
+        style: const TextStyle(fontSize: 14, color: Colors.black),
+      ),
       leading: Container(
         height: 60,
         width: 60,
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: Color(0xFFE5E5E5),
           borderRadius: BorderRadius.circular(45),
         ),
         child: thisItem.containsKey('imageUrl')
             ? CircleAvatar(
                 radius: 60,
-                backgroundColor: Colors.black,
+                backgroundColor: Color(0xFFE5E5E5),
                 backgroundImage: NetworkImage(
                   '${thisItem['imageUrl']}',
                 ),
@@ -125,7 +124,8 @@ class Listtile extends StatelessWidget {
             : Container(),
       ),
       onTap: () {
-        Navigator.pushNamed(context, 'profile', arguments: thisItem);
+        Navigator.pushNamed(context, 'edit',
+            arguments: {'myMap': thisItem, 'id': id});
       },
       onLongPress: () {
         showDialog(
@@ -145,12 +145,13 @@ class Listtile extends StatelessWidget {
                     },
                     child: const Text("No")),
                 TextButton(
-                    onPressed: () {
-                      Provider.of<StudentProvider>(context, listen: false)
-                          .deleteStudent(thisItem['name']);
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Yes")),
+                  onPressed: () {
+                    Provider.of<StudentProvider>(context, listen: false)
+                        .deleteStudent(id);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Yes"),
+                ),
               ],
             );
           }),

@@ -1,5 +1,5 @@
 import 'package:firebase/student_management/repositories/student/student_operation/pages/edit_screen.dart';
-import 'package:firebase/student_management/repositories/student/student_operation/pages/profile_page/profile.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -26,6 +26,5 @@ class Routes {
     'student': (context) => StudentDetails(),
     'notification': (context) => const NotificationPage(),
     'edit': (context) => EditScreen(),
-    'profile': (context) => ProfilePage(),
   };
 }

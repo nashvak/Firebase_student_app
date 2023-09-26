@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
     // final authService = Provider.of<AuthService>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFFE5E5E5),
       appBar: AppBar(
         leading: Builder(builder: (BuildContext context) {
           return IconButton(
@@ -190,6 +190,7 @@ class _HomeState extends State<Home> {
   }
 }
 
+// ignore: must_be_immutable
 class Cards extends StatelessWidget {
   Cards(
       {super.key,
