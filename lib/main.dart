@@ -7,16 +7,12 @@ import 'package:firebase/student_management/repositories/authentication/phone/ph
 import 'package:firebase/student_management/repositories/push_notification/firebase_api/firebase_api.dart';
 
 import 'package:firebase/student_management/repositories/student/home_page/home.dart';
-
 import 'package:firebase/student_management/repositories/student/student_operation/services/student_services.dart';
-
 import 'package:firebase/student_management/routes/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-
 import 'firebase_options.dart';
 
 //navigate to pages without build context  used in the provider class

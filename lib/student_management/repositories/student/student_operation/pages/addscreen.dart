@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:firebase/student_management/repositories/student/student_operation/models/models.dart';
 import 'package:firebase/student_management/repositories/student/student_operation/services/student_services.dart';
+import 'package:firebase/student_management/repositories/student/student_operation/widgets/textform.dart';
+import 'package:firebase/student_management/repositories/student/student_operation/widgets/validators.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,19 +47,21 @@ class _AddScreenState extends State<AddScreen> {
     });
   }
 
+  // A C C E S S   C U R R E N T   L O C A T I O N
+
   void getCurrentPosition() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       Fluttertoast.showToast(
           msg:
-              "Permission for accessing location is denied,Please go to settings ,and on");
+              "Permission for accessing location is denied,Please go to settings and turn on");
       Geolocator.requestPermission();
     } else {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
-      print("Longitude:${position.longitude}");
-      print("Latitude:${position.latitude}");
+      // print("Longitude:${position.longitude}");
+      // print("Latitude:${position.latitude}");
       try {
         List<Placemark> placemarks = await placemarkFromCoordinates(
             position.latitude, position.longitude);
@@ -75,14 +79,14 @@ class _AddScreenState extends State<AddScreen> {
     }
   }
 
-  //
+  //  S E L E C T  D A T E  O F   B I R T H
 
   Future<void> selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: DateTime(1990),
+      lastDate: DateTime(2024),
     );
 
     if (pickedDate != null && pickedDate != DateTime.now()) {
@@ -93,6 +97,37 @@ class _AddScreenState extends State<AddScreen> {
     }
   }
 
+  //  B O T T O M     S H E E T
+  void bottom() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Take Photo'),
+              onTap: () {
+                getImage(true);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo),
+              title: const Text('Choose Photo'),
+              onTap: () {
+                getImage(false);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+//   B U I L D
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,32 +152,7 @@ class _AddScreenState extends State<AddScreen> {
                     Height30,
                     GestureDetector(
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                ListTile(
-                                  leading: const Icon(Icons.camera_alt),
-                                  title: const Text('Take Photo'),
-                                  onTap: () {
-                                    getImage(true);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                ListTile(
-                                  leading: const Icon(Icons.photo),
-                                  title: const Text('Choose Photo'),
-                                  onTap: () {
-                                    getImage(false);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                        bottom();
                       },
                       child: Container(
                         //scolor: Colors.orange,
@@ -176,84 +186,37 @@ class _AddScreenState extends State<AddScreen> {
                               ),
                       ),
                     ),
-                    TextFormField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Name',
-                          prefixIcon: Icon(Icons.person)),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter name";
-                        }
-                        return null;
-                      },
-                    ),
+                    customTextform('Name', nameController, Icon(Icons.person),
+                        nameValidator),
                     Height10,
-                    TextFormField(
-                      controller: ageController,
-                      decoration: const InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Age',
-                          prefixIcon: Icon(Icons.cake)),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter Age";
-                        }
-                        return null;
-                      },
-                    ),
+                    customTextform('Age', ageController,
+                        Icon(Icons.cake_outlined), ageValidator),
                     Height10,
-                    TextFormField(
-                      controller: courseContoller,
-                      decoration: const InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: 'Course',
-                          prefixIcon: Icon(Icons.event_note_sharp)),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter course";
-                        }
-                        return null;
-                      },
-                    ),
+                    customTextform('Course', courseContoller,
+                        Icon(Icons.event_note_sharp), courseValidator),
                     Height10,
                     TextFormField(
                       controller: dobContoller,
                       decoration: InputDecoration(
-                          border: const UnderlineInputBorder(),
-                          hintText: ' Date of birth',
-                          prefixIcon: const Icon(Icons.calendar_month),
-                          suffixIcon: IconButton(
-                              onPressed: () async {
-                                selectDate(context);
-                              },
-                              icon: const Icon(Icons.calendar_month))),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter Date of birth";
-                        }
-                        return null;
-                      },
+                        border: const UnderlineInputBorder(),
+                        hintText: ' Date of birth',
+                        suffixIcon: IconButton(
+                          onPressed: () async {
+                            selectDate(context);
+                          },
+                          icon: const Icon(Icons.calendar_month),
+                        ),
+                      ),
+                      validator: dobValidator,
                     ),
+                    Height10,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
                           width: 210,
-                          child: TextField(
-                            controller: addressContoller,
-                            decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                hintText: ' Address',
-                                prefixIcon: Icon(Icons.location_on)),
-                            // validator: (value) {
-                            //   if (value!.isEmpty) {
-                            //     return "Enter name";
-                            //   }
-                            //   return null;
-                            // },
-                          ),
+                          child: customTextform("Address", addressContoller,
+                              Icon(Icons.home), placeValidator),
                         ),
                         TextButton(
                           onPressed: () {
@@ -300,8 +263,9 @@ class _AddScreenState extends State<AddScreen> {
                           }
                         },
                         style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.green)),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
                         child: const Text("Add"),
                       ),
                     ),

@@ -1,177 +1,3 @@
-// import 'dart:io';
-
-// import 'package:firebase/student_management/repositories/student/student_operation/services/student_services.dart';
-// import 'package:firebase/student_management/reusablewidgets/constants.dart';
-// import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:provider/provider.dart';
-
-// class EditScreen extends StatefulWidget {
-//   //final Map<dynamic, dynamic> items;
-//   const EditScreen({super.key});
-
-//   @override
-//   State<EditScreen> createState() => _EditScreenState();
-// }
-
-// class _EditScreenState extends State<EditScreen> {
-//   File? file;
-
-//   XFile? pickedFile;
-//   // A C C E S S    I M A G E
-//   Future getImage(bool isCamera) async {
-//     final picker = ImagePicker();
-//     if (isCamera) {
-//       pickedFile = await picker.pickImage(source: ImageSource.camera);
-//     } else {
-//       pickedFile = await picker.pickImage(source: ImageSource.gallery);
-//     }
-//     setState(() {
-//       file = File(pickedFile!.path);
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final args = ModalRoute.of(context)!.settings.arguments as Map;
-//     print('build');
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.green,
-//         //title: Text("Nashva"),
-//         centerTitle: true,
-//         elevation: 0,
-//       ),
-//       body: Column(
-//         children: [
-//           Container(
-//             height: 200,
-//             width: double.infinity,
-//             decoration: const BoxDecoration(
-//               color: Colors.green,
-//               borderRadius: BorderRadius.only(
-//                 bottomLeft: Radius.circular(30),
-//                 bottomRight: Radius.circular(30),
-//               ),
-//             ),
-//             child: Column(
-//               children: [
-//                 GestureDetector(
-//                     onTap: () {},
-//                     // ignore: unnecessary_null_comparison
-//                     child: widget.items.containsKey('imageUrl') && file == null
-//                         ? CircleAvatar(
-//                             radius: 50,
-//                             backgroundImage:
-//                                 NetworkImage(widget.items['imageUrl']),
-//                           )
-//                         : CircleAvatar(
-//                             radius: 50,
-//                             backgroundImage: FileImage(file!),
-//                           )),
-//                 Height10,
-//                 Text(
-//                   widget.items['name'],
-//                   style: const TextStyle(fontSize: 25),
-//                 ),
-//                 Text(
-//                   widget.items['course'],
-//                   style: const TextStyle(fontSize: 15),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Expanded(
-//             child: Padding(
-//               padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
-//               child: Column(
-//                 children: [
-//                   SizedBox(
-//                     height: 70,
-//                     child: Card(
-//                       color: Colors.white,
-//                       elevation: 20,
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(10.0),
-//                       ),
-//                       child: Center(
-//                         child: ListTile(
-//                           onTap: () {},
-//                           leading: const Icon(
-//                             Icons.my_library_books,
-//                             size: 30,
-//                           ),
-//                           title: const Text(
-//                             "Review",
-//                             style: TextStyle(fontSize: 25),
-//                           ),
-//                           trailing: const Icon(Icons.arrow_forward_ios_rounded,
-//                               size: 30),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                   Height30,
-//                   SizedBox(
-//                     height: 70,
-//                     child: Card(
-//                       color: Colors.white,
-//                       elevation: 20,
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(10.0),
-//                       ),
-//                       child: Center(
-//                         child: ListTile(
-//                           onTap: () {},
-//                           leading: const Icon(
-//                             Icons.location_on,
-//                             size: 30,
-//                           ),
-//                           title: const Text(
-//                             "Location",
-//                             style: TextStyle(fontSize: 25),
-//                           ),
-//                           trailing: const Icon(Icons.arrow_forward_ios_rounded,
-//                               size: 30),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                   Height30,
-//                   SizedBox(
-//                     height: 70,
-//                     child: Card(
-//                       color: Colors.white,
-//                       elevation: 20,
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(10.0),
-//                       ),
-//                       child: Center(
-//                         child: ListTile(
-//                           onTap: () {},
-//                           leading: const Icon(
-//                             Icons.calendar_month_outlined,
-//                             size: 30,
-//                           ),
-//                           title: const Text(
-//                             "Attendance",
-//                             style: TextStyle(fontSize: 25),
-//                           ),
-//                           trailing: const Icon(Icons.arrow_forward_ios_rounded,
-//                               size: 30),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -200,8 +26,8 @@ class _EditScreenState extends State<EditScreen> {
   File? file;
   String? imageURL;
   late Reference imagetoUploadRef;
-
-  Future getImage(String url) async {
+  String? imageurl;
+  Future getImage(String image) async {
     final picker = ImagePicker();
     XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -209,7 +35,7 @@ class _EditScreenState extends State<EditScreen> {
     });
 
     if (file != null) {
-      imagetoUploadRef = FirebaseStorage.instance.refFromURL(url);
+      imagetoUploadRef = FirebaseStorage.instance.refFromURL(image);
 
       try {
         await imagetoUploadRef.putFile(file!);
@@ -268,7 +94,21 @@ class _EditScreenState extends State<EditScreen> {
                         // Navigator.pop(context);
                         // Navigator.pushNamed(context, 'student');
                         //   String id = args['name'];
-                        if (file != null) {
+                        if (file == null) {
+                          Map<String, String> dataToUpdate = {
+                            'imageUrl': student['imageUrl'],
+                            'name': name,
+                            'dateOfBirth': dob,
+                            'course': course,
+                            'age': age,
+                            'address': address,
+                          };
+                          FirebaseFirestore.instance
+                              .collection('student_management')
+                              .doc(id)
+                              .update(dataToUpdate);
+                          Navigator.pop(context);
+                        } else {
                           Map<String, String> dataToUpdate = {
                             'imageUrl': imageURL.toString(),
                             'name': name,
@@ -293,20 +133,17 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               GestureDetector(
                   onTap: () {
                     getImage(student['imageUrl']);
                   },
-                  child: (student.containsKey('imageUrl') && file == null)
+                  child: (file == null)
                       ? CircleAvatar(
                           radius: 40,
-                          backgroundImage: NetworkImage(
-                            student['imageUrl'],
-                          ),
-                        )
+                          backgroundImage: NetworkImage(student['imageUrl']))
                       : CircleAvatar(
                           radius: 40,
                           backgroundImage: FileImage(
