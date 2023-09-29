@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/main.dart';
 import 'package:firebase/view_model/image_provider/image_provider.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -57,12 +58,21 @@ class StudentProvider with ChangeNotifier {
   late String imageURL;
 
   //  C R E A T E    S T U D E N T
-  Future<void> createStudent(Student st) async {
-    String imageUrl = await imageService.uploadImage(st.dp);
-
-    await firebaseService.createUser(
-        imageUrl, st.name, st.dob, st.course, st.age, st.address);
-    notifyListeners();
+  Future<void> createStudent(Student st, BuildContext context) async {
+    if (st.dp == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please upload an image'),
+        ),
+      );
+    } else {
+      String imageUrl = await imageService.uploadImage(st.dp);
+      await firebaseService
+          .createUser(imageUrl, st.name, st.dob, st.course, st.age, st.address)
+          .then((value) => navigatorKey.currentState!.pop())
+          .then((value) => navigatorKey.currentState!.pushNamed('student'));
+      notifyListeners();
+    }
   }
 
   /// D E L E T E   S T U D E N T

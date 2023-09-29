@@ -34,7 +34,7 @@ class _AddScreenState extends State<AddScreen> {
   File? file;
 
   //  B O T T O M     S H E E T
-  void bottom() {
+  Future<void> bottom() async {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -63,17 +63,12 @@ class _AddScreenState extends State<AddScreen> {
         );
       },
     );
+    ;
   }
 
 //   A D D   S T U D E N T
   void addStudent() {
-    if (file == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please upload an image'),
-        ),
-      );
-    } else if (formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate()) {
       String name = nameController.text;
       String age = ageController.text;
       String course = courseContoller.text;
@@ -87,10 +82,8 @@ class _AddScreenState extends State<AddScreen> {
           dp: file,
           address: address);
 
-      Provider.of<StudentProvider>(context, listen: false).createStudent(st);
-
-      Navigator.pop(context);
-      Navigator.pushNamed(context, 'student');
+      Provider.of<StudentProvider>(context, listen: false)
+          .createStudent(st, context);
     }
   }
 
