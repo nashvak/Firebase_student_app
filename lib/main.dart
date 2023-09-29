@@ -1,14 +1,14 @@
-import 'package:firebase/student_management/repositories/authentication/login_signup/screens/login.dart';
+import 'package:firebase/view/login_signup/login.dart';
 
-import 'package:firebase/student_management/repositories/authentication/login_signup/services/auth_provider.dart';
+import 'package:firebase/view_model/authentication_services/auth_provider.dart';
 
-import 'package:firebase/student_management/repositories/authentication/phone/phone_otp_provider.dart';
+import 'package:firebase/view_model/phone_services/phone_otp_provider.dart';
 
-import 'package:firebase/student_management/repositories/push_notification/firebase_api/firebase_api.dart';
+import 'package:firebase/repositories/push_notification/firebase_api.dart';
 
-import 'package:firebase/student_management/repositories/student/home_page/home.dart';
-import 'package:firebase/student_management/repositories/student/student_operation/services/student_services.dart';
-import 'package:firebase/student_management/routes/routes.dart';
+import 'package:firebase/view/home_page/home.dart';
+import 'package:firebase/view_model/student_services/student_services.dart';
+import 'package:firebase/routes/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
