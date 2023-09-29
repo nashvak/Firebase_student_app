@@ -1,7 +1,7 @@
 // ignore: file_names
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:firebase/view_model/student_services/student_services.dart';
+import 'package:firebase/view_model/student_services/student_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-
 import 'package:firebase/models/student_models.dart';
+import 'package:firebase/view_model/image_provider/image_provider.dart';
 
 import 'package:firebase/widgets/button.dart';
 import 'package:firebase/constants/constants.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../view_model/student_services/student_services.dart';
+import '../../view_model/student_services/student_provider.dart';
 
 class EditScreen extends StatefulWidget {
   const EditScreen({super.key});
@@ -28,10 +28,10 @@ class _EditScreenState extends State<EditScreen> {
   final formKey = GlobalKey<FormState>();
 
   File? file;
-  String? imageURL;
+  String imageURL = '';
   late Reference imagetoUploadRef;
   String? imageurl;
-  Future getImage(String image) async {
+  Future editImage(String image) async {
     final picker = ImagePicker();
     XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -65,7 +65,8 @@ class _EditScreenState extends State<EditScreen> {
             course: course,
             dp: student['imageUrl'],
             address: address);
-        Provider.of<StudentProvider>(context, listen: false).update(st, id);
+        Provider.of<StudentProvider>(context, listen: false)
+            .updateStudent(st, id);
         Navigator.pop(context);
       } else {
         Student st = Student(
@@ -75,39 +76,10 @@ class _EditScreenState extends State<EditScreen> {
             course: course,
             dp: imageURL.toString(),
             address: address);
-        Provider.of<StudentProvider>(context, listen: false).update(st, id);
+        Provider.of<StudentProvider>(context, listen: false)
+            .updateStudent(st, id);
         Navigator.pop(context);
       }
-
-      // if (file == null) {
-      //   Map<String, String> dataToUpdate = {
-      //     'imageUrl': student['imageUrl'],
-      //     'name': name,
-      //     'dateOfBirth': dob,
-      //     'course': course,
-      //     'age': age,
-      //     'address': address,
-      //   };
-      //   FirebaseFirestore.instance
-      //       .collection('student_management')
-      //       .doc(id)
-      //       .update(dataToUpdate);
-      //   Navigator.pop(context);
-      // } else {
-      //   Map<String, String> dataToUpdate = {
-      //     'imageUrl': imageURL.toString(),
-      //     'name': name,
-      //     'dateOfBirth': dob,
-      //     'course': course,
-      //     'age': age,
-      //     'address': address,
-      //   };
-      //   FirebaseFirestore.instance
-      //       .collection('student_management')
-      //       .doc(id)
-      //       .update(dataToUpdate);
-      //   Navigator.pop(context);
-      // }
     }
   }
 
@@ -158,19 +130,27 @@ class _EditScreenState extends State<EditScreen> {
               ),
               height30,
               GestureDetector(
-                  onTap: () {
-                    getImage(student['imageUrl']);
+                onTap: () {
+                  editImage(student['imageUrl']);
+                },
+                child: Consumer<ImageService>(
+                  builder: (context, value, child) {
+                    return (file == null)
+                        ? CircleAvatar(
+                            radius: 40,
+                            backgroundImage: NetworkImage(
+                              student['imageUrl'],
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 40,
+                            backgroundImage: FileImage(
+                              file!,
+                            ),
+                          );
                   },
-                  child: (file == null)
-                      ? CircleAvatar(
-                          radius: 40,
-                          backgroundImage: NetworkImage(student['imageUrl']))
-                      : CircleAvatar(
-                          radius: 40,
-                          backgroundImage: FileImage(
-                            file!,
-                          ),
-                        )),
+                ),
+              ),
               height20,
               Container(
                 decoration: BoxDecoration(

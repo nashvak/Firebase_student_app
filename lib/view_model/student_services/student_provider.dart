@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/view_model/image_provider/image_provider.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +12,7 @@ final CollectionReference _collectionReference =
     FirebaseFirestore.instance.collection('student_management');
 
 class FirebaseService {
+  // C R E A T E   S T U D E N T
   Future<void> createUser(String imageUrl, String name, String dob,
       String course, String age, String address) async {
     await _collectionReference.doc().set({
@@ -22,6 +25,7 @@ class FirebaseService {
     });
   }
 
+//  U P D A T E   S T U D E N T
   Future<void> updateUser(String imageUrl, String name, String dob,
       String course, String age, String address, String id) async {
     await _collectionReference.doc(id).update({
@@ -36,38 +40,31 @@ class FirebaseService {
 }
 
 //
+
+//
+
+//
+
+//
+
+//
+
 class StudentProvider with ChangeNotifier {
+  ImageService imageService = ImageService();
   late Reference imagetoUploadRef;
-  final FirebaseService _firebaseService = FirebaseService();
+  final FirebaseService firebaseService = FirebaseService();
   late String imageURL;
 
-  Future<String> uploadImage(var imageFile) async {
-    if (imageFile != null) {
-      String uniqueFilename = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference imagetoUploadRef =
-          FirebaseStorage.instance.ref().child('images').child(uniqueFilename);
+  //  C R E A T E    S T U D E N T
+  Future<void> createStudent(Student st) async {
+    String imageUrl = await imageService.uploadImage(st.dp);
 
-      await imagetoUploadRef.putFile(imageFile!);
-      String imageURL = await imagetoUploadRef.getDownloadURL();
-      return imageURL;
-      // } catch (error) {
-      //   print(error);
-      // }
-    } else {
-      return "Error";
-    }
-  }
-
-  /// C R E A T E    F U N C T I O N
-  Future<void> createUser(Student st) async {
-    String imageUrl = await uploadImage(st.dp);
-
-    await _firebaseService.createUser(
+    await firebaseService.createUser(
         imageUrl, st.name, st.dob, st.course, st.age, st.address);
     notifyListeners();
   }
 
-  /// D E L E T E   F U N C T I O N
+  /// D E L E T E   S T U D E N T
   Future<void> deleteStudent(String docId) async {
     await _collectionReference.doc(docId).delete();
     notifyListeners();
@@ -76,8 +73,6 @@ class StudentProvider with ChangeNotifier {
   //  E D I T   I M A G E
 
   Future<String?> editProfileImage(File? file, String imageUrl) async {
-    // String uniqueName = DateTime.now().millisecondsSinceEpoch.toString();
-
     imagetoUploadRef = FirebaseStorage.instance.refFromURL(imageUrl);
 
     try {
@@ -91,8 +86,8 @@ class StudentProvider with ChangeNotifier {
   }
 
 //   U P D A T E   S T U D E N T
-  Future<void> update(Student st, String id) async {
-    await _firebaseService.updateUser(
+  Future<void> updateStudent(Student st, String id) async {
+    await firebaseService.updateUser(
         st.dp, st.name, st.dob, st.course, st.age, st.address, id);
     notifyListeners();
   }

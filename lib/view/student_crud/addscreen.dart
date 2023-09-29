@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:firebase/models/student_models.dart';
-import 'package:firebase/view_model/student_services/student_services.dart';
+import 'package:firebase/view_model/image_provider/image_provider.dart';
+import 'package:firebase/view_model/student_services/student_provider.dart';
 import 'package:firebase/widgets/student_textform.dart';
 import 'package:firebase/widgets/validators.dart';
 
@@ -9,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/button.dart';
@@ -30,23 +33,8 @@ class _AddScreenState extends State<AddScreen> {
   final addressContoller = TextEditingController();
   final formKey = GlobalKey<FormState>();
   late Position currentPosition;
-  String currentAddress = "My Address";
   File? file;
-
-  XFile? pickedFile;
-
-  // A C C E S S    I M A G E
-  Future getImage(bool isCamera) async {
-    final picker = ImagePicker();
-    if (isCamera) {
-      pickedFile = await picker.pickImage(source: ImageSource.camera);
-    } else {
-      pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    }
-    setState(() {
-      file = File(pickedFile!.path);
-    });
-  }
+  String currentAddress = "My Address";
 
   // A C C E S S   C U R R E N T   L O C A T I O N
 
@@ -109,16 +97,18 @@ class _AddScreenState extends State<AddScreen> {
             ListTile(
               leading: const Icon(Icons.camera_alt),
               title: const Text('Take Photo'),
-              onTap: () {
-                getImage(true);
+              onTap: () async {
+                file = await Provider.of<ImageService>(context, listen: false)
+                    .getImag(true);
                 Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.photo),
               title: const Text('Choose Photo'),
-              onTap: () {
-                getImage(false);
+              onTap: () async {
+                file = await Provider.of<ImageService>(context, listen: false)
+                    .getImag(false);
                 Navigator.pop(context);
               },
             ),
@@ -150,7 +140,7 @@ class _AddScreenState extends State<AddScreen> {
           dp: file,
           address: address);
 
-      Provider.of<StudentProvider>(context, listen: false).createUser(st);
+      Provider.of<StudentProvider>(context, listen: false).createStudent(st);
 
       Navigator.pop(context);
       Navigator.pushNamed(context, 'student');
@@ -183,36 +173,42 @@ class _AddScreenState extends State<AddScreen> {
                       onTap: () {
                         bottom();
                       },
-                      child: Container(
-                        //scolor: Colors.orange,
-                        child: (file == null)
-                            ? const Stack(
-                                alignment: Alignment.bottomCenter,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: CircleAvatar(
-                                      radius: 60,
-                                      backgroundColor: Colors.black,
-                                      backgroundImage: AssetImage(
-                                          'assets/images/user-logo.png'),
-                                    ),
-                                  ),
-                                  CircleAvatar(
-                                    radius: 14,
-                                    backgroundColor: Colors.white,
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Color.fromARGB(255, 89, 88, 88),
-                                    ),
+                      child: Consumer<ImageService>(
+                        builder: (context, value, child) {
+                          return Container(
+                            //scolor: Colors.orange,
+                            child: (file == null)
+                                ? const Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: CircleAvatar(
+                                          radius: 60,
+                                          backgroundColor: Colors.black,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/user-logo.png'),
+                                        ),
+                                      ),
+                                      CircleAvatar(
+                                        radius: 14,
+                                        backgroundColor: Colors.white,
+                                        child: Icon(
+                                          Icons.add,
+                                          color:
+                                              Color.fromARGB(255, 89, 88, 88),
+                                        ),
+                                      )
+                                    ],
                                   )
-                                ],
-                              )
-                            : CircleAvatar(
-                                radius: 60,
-                                backgroundColor: Colors.white,
-                                backgroundImage: FileImage(file!),
-                              ),
+                                : CircleAvatar(
+                                    radius: 60,
+                                    backgroundColor: Colors.white,
+                                    backgroundImage: FileImage(file!),
+                                  ),
+                          );
+                        },
                       ),
                     ),
                     height10,

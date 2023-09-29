@@ -1,13 +1,14 @@
 import 'package:firebase/view/login_signup/login.dart';
 
 import 'package:firebase/view_model/authentication_services/auth_provider.dart';
+import 'package:firebase/view_model/image_provider/image_provider.dart';
 
 import 'package:firebase/view_model/phone_services/phone_otp_provider.dart';
 
 import 'package:firebase/repositories/push_notification/firebase_api.dart';
 
 import 'package:firebase/view/home_page/home.dart';
-import 'package:firebase/view_model/student_services/student_services.dart';
+import 'package:firebase/view_model/student_services/student_provider.dart';
 import 'package:firebase/routes/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,9 @@ void main() async {
         ),
         ChangeNotifierProvider<StudentProvider>(
           create: (context) => StudentProvider(),
+        ),
+        ChangeNotifierProvider<ImageService>(
+          create: (context) => ImageService(),
         ),
       ],
       child: const MyApp(),
