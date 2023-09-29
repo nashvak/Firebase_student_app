@@ -5,6 +5,7 @@ import 'package:firebase/view_model/image_provider/image_provider.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/student_models.dart';
 
@@ -90,5 +91,24 @@ class StudentProvider with ChangeNotifier {
     await firebaseService.updateUser(
         st.dp, st.name, st.dob, st.course, st.age, st.address, id);
     notifyListeners();
+  }
+
+  //  S E L E C T  D A T E  O F   B I R T H
+  String? date;
+  Future<String> selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1990),
+      lastDate: DateTime(2024),
+    );
+
+    if (pickedDate != null && pickedDate != DateTime.now()) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+
+      date = formattedDate.toString();
+      notifyListeners();
+    }
+    return date!;
   }
 }

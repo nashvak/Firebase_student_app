@@ -2,6 +2,7 @@ import 'package:firebase/view/login_signup/login.dart';
 
 import 'package:firebase/view_model/authentication_services/auth_provider.dart';
 import 'package:firebase/view_model/image_provider/image_provider.dart';
+import 'package:firebase/view_model/location_provider/location_provider.dart';
 
 import 'package:firebase/view_model/phone_services/phone_otp_provider.dart';
 
@@ -39,6 +40,9 @@ void main() async {
         ),
         ChangeNotifierProvider<ImageService>(
           create: (context) => ImageService(),
+        ),
+        ChangeNotifierProvider<LocationService>(
+          create: (context) => LocationService(),
         ),
       ],
       child: const MyApp(),

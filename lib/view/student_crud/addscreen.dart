@@ -4,17 +4,15 @@ import 'dart:io';
 
 import 'package:firebase/models/student_models.dart';
 import 'package:firebase/view_model/image_provider/image_provider.dart';
+import 'package:firebase/view_model/location_provider/location_provider.dart';
 import 'package:firebase/view_model/student_services/student_provider.dart';
 import 'package:firebase/widgets/student_textform.dart';
 import 'package:firebase/widgets/validators.dart';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+
 import '../../widgets/button.dart';
 import '../../constants/constants.dart';
 
@@ -32,59 +30,8 @@ class _AddScreenState extends State<AddScreen> {
   final dobContoller = TextEditingController();
   final addressContoller = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  late Position currentPosition;
+
   File? file;
-  String currentAddress = "My Address";
-
-  // A C C E S S   C U R R E N T   L O C A T I O N
-
-  void getCurrentPosition() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      Fluttertoast.showToast(
-          msg:
-              "Permission for accessing location is denied,Please go to settings and turn on");
-      Geolocator.requestPermission();
-    } else {
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best);
-      // print("Longitude:${position.longitude}");
-      // print("Latitude:${position.latitude}");
-      try {
-        List<Placemark> placemarks = await placemarkFromCoordinates(
-            position.latitude, position.longitude);
-        Placemark place = placemarks[0];
-        setState(() {
-          currentPosition = position;
-          currentAddress =
-              "${place.locality},${place.postalCode},${place.country}";
-          addressContoller.text = currentAddress;
-          // print(currentAddress);
-        });
-      } catch (e) {
-        Fluttertoast.showToast(msg: e.toString());
-      }
-    }
-  }
-
-  //  S E L E C T  D A T E  O F   B I R T H
-
-  Future<void> selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1990),
-      lastDate: DateTime(2024),
-    );
-
-    if (pickedDate != null && pickedDate != DateTime.now()) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      setState(() {
-        dobContoller.text = formattedDate.toString();
-      });
-    }
-  }
 
   //  B O T T O M     S H E E T
   void bottom() {
@@ -150,6 +97,10 @@ class _AddScreenState extends State<AddScreen> {
 //   B U I L D
   @override
   Widget build(BuildContext context) {
+    final studentProvider =
+        Provider.of<StudentProvider>(context, listen: false);
+    final locationProvider =
+        Provider.of<LocationService>(context, listen: false);
     return Scaffold(
       backgroundColor: const Color(0xFFE5E5E5),
       appBar: AppBar(
@@ -176,7 +127,6 @@ class _AddScreenState extends State<AddScreen> {
                       child: Consumer<ImageService>(
                         builder: (context, value, child) {
                           return Container(
-                            //scolor: Colors.orange,
                             child: (file == null)
                                 ? const Stack(
                                     alignment: Alignment.bottomCenter,
@@ -232,7 +182,8 @@ class _AddScreenState extends State<AddScreen> {
                       dobValidator,
                       IconButton(
                         onPressed: () async {
-                          selectDate(context);
+                          dobContoller.text =
+                              await studentProvider.selectDate(context);
                         },
                         icon: const Icon(Icons.calendar_month),
                       ),
@@ -247,8 +198,9 @@ class _AddScreenState extends State<AddScreen> {
                               const Icon(Icons.home), placeValidator, null),
                         ),
                         TextButton(
-                          onPressed: () {
-                            getCurrentPosition();
+                          onPressed: () async {
+                            addressContoller.text =
+                                await locationProvider.getCurrentPosition();
                           },
                           child: const Text(
                             "find",
