@@ -1,3 +1,4 @@
+import 'package:firebase/view/landing_page/landing_page.dart';
 import 'package:firebase/view/login_signup/login.dart';
 
 import 'package:firebase/view_model/authentication_services/auth_provider.dart';
@@ -82,7 +83,7 @@ class _CheckLoginOrNotState extends State<CheckLoginOrNot> {
         if (snapshot.connectionState == ConnectionState.active) {
           User? user = snapshot.data;
           if (user == null) {
-            return const LoginScreen();
+            return const LandingPage();
           } else {
             return const Home();
           }
