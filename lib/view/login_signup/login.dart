@@ -93,7 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   emailController,
                                   const Icon(Icons.email),
                                   TextInputType.emailAddress,
-                                  null,
                                   false,
                                   (value) {
                                     if (value!.isEmpty) {
@@ -118,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   passwordController,
                                   const Icon(Icons.lock),
                                   TextInputType.text,
-                                  null,
                                   true,
                                   (value) {
                                     if (value!.isEmpty) {

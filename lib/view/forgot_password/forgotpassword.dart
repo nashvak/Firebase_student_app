@@ -1,5 +1,8 @@
 import 'package:firebase/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../view_model/authentication_services/auth_provider.dart';
 
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({super.key});
@@ -8,14 +11,13 @@ class ForgotPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context, listen: false);
     return Scaffold(
+      appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Column(children: [
-            const SizedBox(
-              height: 70,
-            ),
             Container(
               alignment: Alignment.topCenter,
               child: const Text(
@@ -60,7 +62,13 @@ class ForgotPassword extends StatelessWidget {
                   const SizedBox(
                     height: 30,
                   ),
-                  Button(title: 'Send email', onTap: () {})
+                  Button(
+                      title: 'Send email',
+                      onTap: () {
+                        if (forgotKey.currentState!.validate()) {
+                          authService.resetPassword(emailController.text);
+                        }
+                      })
                 ],
               ),
             ),

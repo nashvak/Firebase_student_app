@@ -76,7 +76,6 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                 verificationCodeController,
                 null,
                 TextInputType.number,
-                null,
                 false,
                 (value) {
                   if (value!.isEmpty) {
