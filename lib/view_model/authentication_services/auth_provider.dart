@@ -21,7 +21,7 @@ class AuthService with ChangeNotifier {
 
   Future createAccount(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
+      UserCredential user = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       navigatorKey.currentState?.pushNamed('home');
       notifyListeners();

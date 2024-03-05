@@ -1,3 +1,4 @@
+import 'package:firebase/view/forgot_password/forgotpassword.dart';
 import 'package:firebase/view/student_crud/edit_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class Routes {
     '/': (context) => const CheckLoginOrNot(),
     'login': (context) => const LoginScreen(),
     'signup': (context) => const SignUp(),
+    'forgot_password': (context) => ForgotPassword(),
     'home': (context) => const Home(),
     'phone': (context) => const PhoneVerification(),
     'verify': (context) => const VerifyCodeScreen(
