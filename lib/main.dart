@@ -1,14 +1,9 @@
 import 'package:firebase/view/landing_page/landing_page.dart';
-import 'package:firebase/view/login_signup/login.dart';
-
 import 'package:firebase/view_model/authentication_services/auth_provider.dart';
 import 'package:firebase/view_model/image_provider/image_provider.dart';
 import 'package:firebase/view_model/location_provider/location_provider.dart';
-
 import 'package:firebase/view_model/phone_services/phone_otp_provider.dart';
-
 import 'package:firebase/repositories/push_notification/firebase_api.dart';
-
 import 'package:firebase/view/home_page/home.dart';
 import 'package:firebase/view_model/student_services/student_provider.dart';
 import 'package:firebase/routes/routes.dart';

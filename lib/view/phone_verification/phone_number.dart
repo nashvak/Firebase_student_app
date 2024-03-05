@@ -88,6 +88,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                     numberController,
                     const Icon(Icons.phone_android),
                     TextInputType.phone,
+                    null,
                     false,
                     (value) {
                       if (value!.isEmpty) {

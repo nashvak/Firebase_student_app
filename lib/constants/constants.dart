@@ -12,3 +12,4 @@ Widget height20 = const SizedBox(
 Widget height50 = const SizedBox(
   height: 50,
 );
+const appColor = Colors.green;

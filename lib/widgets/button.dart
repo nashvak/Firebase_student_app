@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../constants/constants.dart';
+
 class Button extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
   final bool loading;
+
   const Button(
       {super.key,
       required this.title,
@@ -19,7 +22,7 @@ class Button extends StatelessWidget {
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-            color: Colors.green, borderRadius: BorderRadius.circular(10)),
+            color: appColor, borderRadius: BorderRadius.circular(10)),
         child: Center(
           child: loading
               ? const CircularProgressIndicator(
@@ -53,14 +56,12 @@ class OutlineButton extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
-              color: Colors.green,
+              color: appColor,
             )),
         child: Center(
           child: Text(title,
               style: const TextStyle(
-                  color: Colors.green,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600)),
+                  color: appColor, fontSize: 15, fontWeight: FontWeight.w600)),
         ),
       ),
     );

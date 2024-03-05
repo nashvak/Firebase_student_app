@@ -5,6 +5,7 @@ Widget loginTextform(
     TextEditingController controller,
     Icon? icon,
     TextInputType keyboardtype,
+    BoxDecoration? decoration,
     bool obscure,
     String? Function(String?)? validator) {
   return TextFormField(
