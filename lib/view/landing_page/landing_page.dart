@@ -33,7 +33,7 @@ class LandingPage extends StatelessWidget {
               OutlineButton(
                   title: 'Login',
                   onTap: () {
-                    Navigator.pushReplacementNamed(context, 'login');
+                    Navigator.pushReplacementNamed(context, 'admin_login');
                   })
             ],
           ),

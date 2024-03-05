@@ -1,6 +1,6 @@
+import 'package:firebase/admin/view/login_page/admin_login.dart';
 import 'package:firebase/view/forgot_password/forgotpassword.dart';
 import 'package:firebase/view/student_crud/edit_screen.dart';
-
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -28,5 +28,6 @@ class Routes {
     'student': (context) => StudentDetails(),
     'notifications': (context) => const NotificationPage(),
     'edit': (context) => const EditScreen(),
+    'admin_login': (context) => AdminLogin(),
   };
 }
